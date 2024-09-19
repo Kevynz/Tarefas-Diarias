@@ -1,20 +1,23 @@
-const tasks = [];
-
 function addTask() {
-    const taskName = document.getElementById('taskName').value;
-    if (taskName.trim() !== '') {
-        tasks.push(taskName);
-        updateTaskList();
-        document.getElementById('taskName').value = '';
-    }
-}
+    const taskName = document.getElementById("taskName").value;
+    const currentTime = new Date().toLocaleTimeString();
 
-function updateTaskList() {
-    const taskList = document.getElementById('taskList');
-    taskList.innerHTML = '';
-    tasks.forEach((task) => {
-        const li = document.createElement('li');
-        li.textContent = task;
-        taskList.appendChild(li);
-    });
+    // Cria elemento <li> para a nova tarefa
+    const newTaskItem = document.createElement("li");
+    newTaskItem.innerHTML = `${taskName} (Início: ${currentTime})`;
+
+    // Cria botao para finalizar tarefa
+    const finishButton = document.createElement("button");
+    finishButton.innerText = "Finalizar";
+    finishButton.onclick = function () {
+        const finishTime = new Date().toLocaleTimeString();
+        newTaskItem.innerHTML += ` - Finalizado às ${finishTime}`;
+        finishButton.disabled = true;
+    };
+
+    // ADD botao a tarefa
+    newTaskItem.appendChild(finishButton);
+
+    // ADD tarefa
+    document.getElementById("taskList").appendChild(newTaskItem);
 }
