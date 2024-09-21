@@ -10,7 +10,7 @@ function comecarTarefa() {
             nome: nomeTarefa,
             tempoInicial: dataInicial,
             tempoFinal: null,
-            tempoCasto: null
+            tempoGasto: null
         };
         tarefas.push(tarefa);
         salvarTarefas();
@@ -27,7 +27,7 @@ function terminarTarefa(index) {
     const tarefa = tarefas[index];
     if (!tarefa.tempoFinal) {
         tarefa.tempoFinal = dataFinal;
-        tarefa.tempoCasto = Math.round((dataFinal - new Date(tarefa.tempoInicial)) / 60000); // transformando para minutos
+        tarefa.tempoGasto = Math.round((dataFinal - new Date(tarefa.tempoInicial)) / 60000); // transformando para minutos
         salvarTarefas();
         atualizarListaTarefa();
         atualizarEstatisticas();
@@ -47,7 +47,7 @@ function atualizarListaTarefa() {
         itemLista.innerHTML = `
             <span>${tarefa.nome} (Iniciada em: ${new Date(tarefa.tempoInicial).toLocaleString()})</span>
             ${tarefa.tempoFinal ? 
-                `<span> - Finalizada em: ${new Date(tarefa.tempoFinal).toLocaleString()} (Tempo Gasto: ${tarefa.tempoCasto} minutos)</span>` : 
+                `<span> - Finalizada em: ${new Date(tarefa.tempoFinal).toLocaleString()} (Tempo Gasto: ${tarefa.tempoGasto} minutos)</span>` : 
                 `<button onclick="terminarTarefa(${index})">Finalizar Tarefa</button>`
             }
         `;
@@ -58,9 +58,9 @@ function atualizarListaTarefa() {
 function atualizarEstatisticas() {
     const tarefasIniciadas = tarefas.length;
     const tarefasCompletas = tarefas.filter(tarefa => tarefa.tempoFinal).length;
-    const tempoCastoTotal = tarefas.reduce((total, tarefa) => total + (tarefa.tempoCasto || 0), 0);
+    const tempoGastoTotal = tarefas.reduce((total, tarefa) => total + (tarefa.tempoGasto || 0), 0);
 
     document.getElementById('tarefasIniciadas').innerText = tarefasIniciadas;
     document.getElementById('tarefasCompletas').innerText = tarefasCompletas;
-    document.getElementById('tempoCastoTotal').innerText = tempoCastoTotal;
+    document.getElementById('tempoGastoTotal').innerText = tempoGastoTotal;
 }
