@@ -1,24 +1,16 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
-}
-
-h1 {
-    color: #333;
-}
-
-.task-form {
     margin: 20px;
 }
 
-input {
-    padding: 5px;
+.lista-tarefa {
+    margin-top: 20px;
 }
 
 button {
-    background-color: #0074D9;
-    color: #FFF;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
+    margin-left: 10px;
+}
+
+.estatisticas {
+    margin-top: 20px;
 }

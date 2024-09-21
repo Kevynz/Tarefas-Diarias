@@ -1,23 +1,66 @@
-function addTask() {
-    const taskName = document.getElementById("taskName").value;
-    const currentTime = new Date().toLocaleTimeString();
+let tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
+atualizarListaTarefa();
+atualizarEstatisticas();
 
-    // Cria elemento <li> para a nova tarefa
-    const newTaskItem = document.createElement("li");
-    newTaskItem.innerHTML = `${taskName} (Início: ${currentTime})`;
+function comecarTarefa() {
+    const nomeTarefa = document.getElementById('nomeTarefa').value;
+    if (nomeTarefa) {
+        const dataInicial = new Date();
+        const tarefa = {
+            nome: nomeTarefa,
+            tempoInicial: dataInicial,
+            tempoFinal: null,
+            tempoCasto: null
+        };
+        tarefas.push(tarefa);
+        salvarTarefas();
+        atualizarListaTarefa();
+        atualizarEstatisticas();
+        document.getElementById('nomeTarefa').value = '';
+    } else {
+        alert('Por favor, insira um nome para a tarefa.');
+    }
+}
 
-    // Cria botao para finalizar tarefa
-    const finishButton = document.createElement("button");
-    finishButton.innerText = "Finalizar";
-    finishButton.onclick = function () {
-        const finishTime = new Date().toLocaleTimeString();
-        newTaskItem.innerHTML += ` - Finalizado às ${finishTime}`;
-        finishButton.disabled = true;
-    };
+function terminarTarefa(index) {
+    const dataFinal = new Date();
+    const tarefa = tarefas[index];
+    if (!tarefa.tempoFinal) {
+        tarefa.tempoFinal = dataFinal;
+        tarefa.tempoCasto = Math.round((dataFinal - new Date(tarefa.tempoInicial)) / 60000); // transformando para minutos
+        salvarTarefas();
+        atualizarListaTarefa();
+        atualizarEstatisticas();
+    }
+}
 
-    // ADD botao a tarefa
-    newTaskItem.appendChild(finishButton);
+function salvarTarefas() {
+    localStorage.setItem('tarefas', JSON.stringify(tarefas));
+}
 
-    // ADD tarefa
-    document.getElementById("taskList").appendChild(newTaskItem);
+function atualizarListaTarefa() {
+    const listaTarefa = document.getElementById('listaTarefa');
+    listaTarefa.innerHTML = '';
+    tarefas.forEach((tarefa, index) => {
+        const itemLista = document.createElement('li');
+        itemLista.classList.add('lista-tarefa');
+        itemLista.innerHTML = `
+            <span>${tarefa.nome} (Iniciada em: ${new Date(tarefa.tempoInicial).toLocaleString()})</span>
+            ${tarefa.tempoFinal ? 
+                `<span> - Finalizada em: ${new Date(tarefa.tempoFinal).toLocaleString()} (Tempo Gasto: ${tarefa.tempoCasto} minutos)</span>` : 
+                `<button onclick="terminarTarefa(${index})">Finalizar Tarefa</button>`
+            }
+        `;
+        listaTarefa.appendChild(itemLista);
+    });
+}
+
+function atualizarEstatisticas() {
+    const tarefasIniciadas = tarefas.length;
+    const tarefasCompletas = tarefas.filter(tarefa => tarefa.tempoFinal).length;
+    const tempoCastoTotal = tarefas.reduce((total, tarefa) => total + (tarefa.tempoCasto || 0), 0);
+
+    document.getElementById('tarefasIniciadas').innerText = tarefasIniciadas;
+    document.getElementById('tarefasCompletas').innerText = tarefasCompletas;
+    document.getElementById('tempoCastoTotal').innerText = tempoCastoTotal;
 }
