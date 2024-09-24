@@ -45,7 +45,7 @@ function atualizarListaTarefa() {
         const itemLista = document.createElement('li');
         itemLista.classList.add('lista-tarefa');
         itemLista.innerHTML = `
-            <span>${tarefa.nome} - Iniciada em: ${new Date(tarefa.tempoInicial).toLocaleString()}</span>
+            <span>${tarefa.nome} - Iniciada em: ${new Date(tarefa.tempoInicial).toLocaleString()}</span><br>
             ${tarefa.tempoFinal ? 
                 `<span> - Finalizada em: ${new Date(tarefa.tempoFinal).toLocaleString()} (Tempo Gasto: ${tarefa.tempoGasto} minutos)</span>` : 
                 `<button onclick="terminarTarefa(${index})">Finalizar Tarefa</button>`
